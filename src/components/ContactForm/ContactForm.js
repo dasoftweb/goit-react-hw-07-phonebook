@@ -11,12 +11,29 @@ class ContactForm extends Component {
 
   handeChange = e => {
     const { name, value } = e.currentTarget;
-    this.setState({ [name]: value });
+    this.setState({ [name]: this.capitalizeFirstLetter(value) });
+  };
+
+  capitalizeFirstLetter = string => {
+    return string.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.onSubmit(this.state); // App formSubmitHandler
+
+    const { name, number } = this.state;
+    const { items, onSubmit } = this.props;
+
+    if (items.some(item => item.name.toLowerCase() === name.toLowerCase())) {
+      return alert(`Name ${name} is already in contacts`);
+    }
+    if (
+      items.some(item => item.number.toLowerCase() === number.toLowerCase())
+    ) {
+      return alert(`Number ${number} is already in contacts`);
+    }
+
+    onSubmit(this.state);
     this.reset();
   };
 
@@ -25,6 +42,7 @@ class ContactForm extends Component {
   };
 
   render() {
+    const { name, number } = this.state; 
     return (
       <form onSubmit={this.handleSubmit}>
         <label className="label">
@@ -32,7 +50,7 @@ class ContactForm extends Component {
           <input
             className="input"
             type="text"
-            value={this.state.name}
+            value={name}
             onChange={this.handeChange}
             name="name"
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -45,7 +63,7 @@ class ContactForm extends Component {
           <input
             className="input"
             type="tel"
-            value={this.state.number}
+            value={number}
             onChange={this.handeChange}
             name="number"
             required
@@ -63,8 +81,13 @@ ContactForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  onSubmit: ({ name, number }) => dispatch(contactOperations.addContact(name, number)),
+const mapStateToProps = state => ({
+  items: state.contacts.items,
 });
 
-export default connect(null, mapDispatchToProps)(ContactForm);
+const mapDispatchToProps = dispatch => ({
+  onSubmit: ({ name, number }) =>
+    dispatch(contactOperations.addContact(name, number)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
