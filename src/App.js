@@ -1,18 +1,37 @@
+import { Component } from 'react';
+import { connect } from 'react-redux';
+import contactsOpertations from './redux/contacts/contacts-opertations';
+
 // Components
 import ContactForm from './components/ContactForm/ContactForm';
 import ContactList from './components/ContactList/ContactList';
 import Filter from './components/Filter/Filter';
 
-const App = () => {
-  return (
-    <div className="phonebook">
-      <h1 className="phonebook_title">Phonebook</h1>
-      <ContactForm />
-      <h2 className="phonebook_title">Contacts</h2>
-      <Filter />
-      <ContactList />
-    </div>
-  );
+class App extends Component {
+  componentDidMount() {
+    this.props.fetchContacts();
+  }
+
+  render() {
+    return (
+      <div className="phonebook">
+        <h1 className="phonebook_title">Phonebook</h1>
+        <ContactForm />
+        <h2 className="phonebook_title">Contacts</h2>
+        <Filter />
+        {this.props.isLoadingContacts && <h1>Loading</h1>}
+        <ContactList />
+      </div>
+    );
+  }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  isLoadingContacts: state.contacts.loading,
+});
+
+const mapDispatchToProps = dispatch => ({
+  fetchContacts: () => dispatch(contactsOpertations.fetchContacts()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
