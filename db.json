@@ -2,13 +2,18 @@
   "contacts": [
     {
       "name": "Rosie Simpson",
-      "number": "3333",
+      "number": "222-22-22",
       "id": 1
     },
     {
       "name": "Alex Bold",
-      "number": "222222",
+      "number": "333-33-33",
       "id": 2
+    },
+    {
+      "name": "Putin Huilo",
+      "number": "666-66-66",
+      "id": 3
     }
   ]
 }
