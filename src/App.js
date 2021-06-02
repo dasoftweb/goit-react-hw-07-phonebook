@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import contactsOpertations from './redux/contacts/contacts-opertations';
+import contactsSelectors from './redux/contacts/contacts-selectors';
 
 // Components
 import ContactForm from './components/ContactForm/ContactForm';
@@ -27,7 +28,7 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
-  isLoadingContacts: state.contacts.loading,
+  isLoadingContacts: contactsSelectors.getLoading(state),
 });
 
 const mapDispatchToProps = dispatch => ({
